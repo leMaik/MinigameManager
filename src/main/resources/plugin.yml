@@ -1,7 +1,0 @@
-name: MinigameManager
-version: VERSION
-main: de.craften.plugins.minigamemanager.MinigameManagerPlugin
-
-commands:
-
-permissions:
