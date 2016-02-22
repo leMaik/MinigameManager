@@ -12,17 +12,19 @@ public interface MinigamePersistence {
     /**
      * Stores a score for a player in the given game.
      *
-     * @param gameId game ID
-     * @param player player
-     * @param score  score
+     * @param gameId  game ID
+     * @param player  player
+     * @param levelId an identifier for the level, i.e. arena name or level name; must be unique per game
+     * @param score   score
      */
-    void putScore(String gameId, Player player, int score);
+    void putScore(String gameId, Player player, String levelId, int score);
 
     /**
      * Gets the top scores of the given game.
      *
-     * @param gameId game ID
-     * @param count  maximum amount of top scores to get
+     * @param gameId  game ID
+     * @param levelId an identifier for the level, i.e. arena name or level name; must be unique per game
+     * @param count   maximum amount of top scores to get
      */
-    List<Score> getTopScores(String gameId, int count);
+    List<Score> getTopScores(String gameId, String levelId, int count);
 }

@@ -1,6 +1,7 @@
 package de.craften.plugins.minigamemanager.plugin.scoreboards;
 
 import de.craften.plugins.minigamemanager.plugin.data.Score;
+import de.craften.plugins.minigamemanager.plugin.util.Tuple;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class SignScoreboard implements Scoreboard {
     private final Location location;
-    private final String gameId;
+    private final Tuple<String, String> gameAndLevel;
 
     public SignScoreboard(ConfigurationSection config) {
         this.location = new Location(
@@ -24,11 +25,9 @@ public class SignScoreboard implements Scoreboard {
                 config.getDouble("y"),
                 config.getDouble("z")
         );
-        this.gameId = ((Sign) location.getBlock().getState()).getLine(1);
-    }
 
-    public String getGameId() {
-        return gameId;
+        Sign sign = (Sign) location.getBlock().getState();
+        this.gameAndLevel = Tuple.of(sign.getLine(1), sign.getLine(2));
     }
 
     @Override
@@ -64,6 +63,10 @@ public class SignScoreboard implements Scoreboard {
             default:
                 return "";
         }
+    }
+
+    public Tuple<String, String> getTopic() {
+        return gameAndLevel;
     }
 
     public enum Topic {

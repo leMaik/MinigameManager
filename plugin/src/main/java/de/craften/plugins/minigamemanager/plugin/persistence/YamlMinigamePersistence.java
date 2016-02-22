@@ -23,13 +23,13 @@ public class YamlMinigamePersistence implements MinigamePersistence {
     }
 
     @Override
-    public void putScore(String gameId, Player player, int score) {
+    public void putScore(String gameId, Player player, String levelId, int score) {
         synchronized (lock) {
-            if (!configuration.isConfigurationSection(gameId)) {
-                configuration.createSection(gameId);
+            if (!configuration.isConfigurationSection(gameId + "." + levelId)) {
+                configuration.createSection(gameId + "." + levelId);
             }
 
-            List<Map<?, ?>> scores = configuration.getMapList(gameId + ".scores");
+            List<Map<?, ?>> scores = configuration.getMapList(gameId + "." + levelId + ".scores");
             if (scores == null) {
                 scores = new ArrayList<>();
             }
@@ -50,12 +50,12 @@ public class YamlMinigamePersistence implements MinigamePersistence {
     }
 
     @Override
-    public List<Score> getTopScores(String gameId, int count) {
+    public List<Score> getTopScores(String gameId, String levelId, int count) {
         synchronized (lock) {
-            if (!configuration.isList(gameId + ".scores")) {
+            if (!configuration.isList(gameId + "." + levelId + ".scores")) {
                 return Collections.emptyList();
             }
-            List<Map<?, ?>> scores = configuration.getMapList(gameId + ".scores");
+            List<Map<?, ?>> scores = configuration.getMapList(gameId + "." + levelId + ".scores");
             List<Score> topScores = new ArrayList<>(scores.size());
             for (Map<?, ?> score : scores) {
                 topScores.add(new Score(

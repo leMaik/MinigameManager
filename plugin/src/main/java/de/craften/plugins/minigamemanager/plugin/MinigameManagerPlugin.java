@@ -10,6 +10,7 @@ import de.craften.plugins.minigamemanager.plugin.persistence.MinigamePersistence
 import de.craften.plugins.minigamemanager.plugin.persistence.YamlMinigamePersistence;
 import de.craften.plugins.minigamemanager.plugin.scoreboards.Scoreboard;
 import de.craften.plugins.minigamemanager.plugin.scoreboards.SignScoreboard;
+import de.craften.plugins.minigamemanager.plugin.util.Tuple;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public class MinigameManagerPlugin extends JavaPlugin {
     private MinigamePersistence persistence;
-    private Multimap<String, Scoreboard> scoreboards = ArrayListMultimap.create();
+    private Multimap<Tuple<String, String>, Scoreboard> scoreboards = ArrayListMultimap.create();
 
     @Override
     public void onEnable() {
@@ -41,12 +42,12 @@ public class MinigameManagerPlugin extends JavaPlugin {
             ConfigurationSection config = scoreboardsConfig.getConfigurationSection(key);
             if (config.getString("type").equals("sign")) {
                 SignScoreboard scoreboard = new SignScoreboard(config);
-                scoreboards.put(scoreboard.getGameId(), scoreboard);
+                scoreboards.put(scoreboard.getTopic(), scoreboard);
             }
         }
 
-        for (String gameId : scoreboards.keySet()) {
-            updateScoreboards(gameId);
+        for (Tuple<String, String> gameId : scoreboards.keySet()) {
+            updateScoreboards(gameId.getFirst(), gameId.getSecond());
         }
     }
 
@@ -55,13 +56,14 @@ public class MinigameManagerPlugin extends JavaPlugin {
     }
 
     /**
-     * Updates all scoreboards for the game with the given ID.
+     * Updates all scoreboards for the game and level with the given ID.
      *
-     * @param gameId game ID
+     * @param gameId  game ID
+     * @param levelId level ID
      */
-    public void updateScoreboards(String gameId) {
-        List<Score> highscore = getPersistence().getTopScores(gameId, 50);
-        for (Scoreboard scoreboard : scoreboards.get(gameId)) {
+    public void updateScoreboards(String gameId, String levelId) {
+        List<Score> highscore = getPersistence().getTopScores(gameId, levelId, 50);
+        for (Scoreboard scoreboard : scoreboards.get(Tuple.of(gameId, levelId))) {
             scoreboard.update(highscore);
         }
     }

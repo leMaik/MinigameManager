@@ -3,7 +3,6 @@ package de.craften.plugins.minigamemanager.plugin.api;
 import de.craften.plugins.minigamemanager.api.MinigameApi;
 import de.craften.plugins.minigamemanager.plugin.MinigameManagerPlugin;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * API for minigames.
@@ -20,8 +19,8 @@ public class MinigameApiImpl extends MinigameApi {
     }
 
     @Override
-    public void setScore(Player player, int score) {
-        plugin.getPersistence().putScore(identifier, player, score);
-        plugin.updateScoreboards(identifier);
+    public void setScore(Player player, String levelId, int score) {
+        plugin.getPersistence().putScore(identifier, player, levelId, score);
+        plugin.updateScoreboards(identifier,levelId);
     }
 }
