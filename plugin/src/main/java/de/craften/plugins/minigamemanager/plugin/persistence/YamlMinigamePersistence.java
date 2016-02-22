@@ -24,12 +24,16 @@ public class YamlMinigamePersistence implements MinigamePersistence {
 
     @Override
     public void putScore(String gameId, Player player, String levelId, int score) {
+        final String key = gameId + "." + levelId;
+        final String scoresKey = key + ".scores";
+
         synchronized (lock) {
-            if (!configuration.isConfigurationSection(gameId + "." + levelId)) {
-                configuration.createSection(gameId + "." + levelId);
+            if (!configuration.isConfigurationSection(key)) {
+                configuration.createSection(key);
             }
 
-            List<Map<?, ?>> scores = configuration.getMapList(gameId + "." + levelId + ".scores");
+
+            List<Map<?, ?>> scores = configuration.getMapList(scoresKey);
             if (scores == null) {
                 scores = new ArrayList<>();
             }
@@ -39,7 +43,7 @@ public class YamlMinigamePersistence implements MinigamePersistence {
             scoreSection.put("score", String.valueOf(score));
             scores.add(scoreSection);
 
-            configuration.set(gameId + ".scores", scores);
+            configuration.set(scoresKey, scores);
 
             try {
                 configuration.save(file);
@@ -51,11 +55,14 @@ public class YamlMinigamePersistence implements MinigamePersistence {
 
     @Override
     public List<Score> getTopScores(String gameId, String levelId, int count) {
+        final String key = gameId + "." + levelId;
+        final String scoresKey = key + ".scores";
+
         synchronized (lock) {
-            if (!configuration.isList(gameId + "." + levelId + ".scores")) {
+            if (!configuration.isList(scoresKey)) {
                 return Collections.emptyList();
             }
-            List<Map<?, ?>> scores = configuration.getMapList(gameId + "." + levelId + ".scores");
+            List<Map<?, ?>> scores = configuration.getMapList(scoresKey);
             List<Score> topScores = new ArrayList<>(scores.size());
             for (Map<?, ?> score : scores) {
                 topScores.add(new Score(
