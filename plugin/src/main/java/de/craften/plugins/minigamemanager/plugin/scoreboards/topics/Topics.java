@@ -12,7 +12,18 @@ public final class Topics {
     private static final Topic TIME = score -> "n/a"; //TODO implement
 
     private static final Topic RANK = score -> String.valueOf(score.getRank());
-    private static final Topic ORDINAL_RANK = score -> "n/a"; //TODO implement
+    private static final Topic ORDINAL_RANK = score -> {
+        int rank = score.getRank();
+        String[] suffixes = new String[]{"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"};
+        switch (rank % 100) {
+            case 11:
+            case 12:
+            case 13:
+                return rank + "th";
+            default:
+                return rank + suffixes[rank % 10];
+        }
+    };
 
     private Topics() {
     }
