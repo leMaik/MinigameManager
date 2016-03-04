@@ -9,11 +9,13 @@ public class Score {
     private final String gameId;
     private final OfflinePlayer player;
     private final int score;
+    private final int rank;
 
-    public Score(String gameId, OfflinePlayer player, int score) {
+    public Score(String gameId, OfflinePlayer player, int score, int rank) {
         this.gameId = gameId;
         this.player = player;
         this.score = score;
+        this.rank = rank;
     }
 
     public String getGameId() {
@@ -26,5 +28,9 @@ public class Score {
 
     public int getScore() {
         return score;
+    }
+
+    public int getRank() {
+        return rank;
     }
 }

@@ -57,6 +57,8 @@ public class YamlMinigamePersistence implements MinigamePersistence {
     public List<Score> getTopScores(String gameId, String levelId, int count) {
         final String key = gameId + "." + levelId;
         final String scoresKey = key + ".scores";
+        int rank = 1;
+        int lastPoints = Integer.MAX_VALUE;
 
         synchronized (lock) {
             if (!configuration.isList(scoresKey)) {
@@ -65,11 +67,15 @@ public class YamlMinigamePersistence implements MinigamePersistence {
             List<Map<?, ?>> scores = configuration.getMapList(scoresKey);
             List<Score> topScores = new ArrayList<>(scores.size());
             for (Map<?, ?> score : scores) {
+                int points = Integer.parseInt(score.get("score").toString());
                 topScores.add(new Score(
                         gameId,
                         Bukkit.getOfflinePlayer(UUID.fromString(score.get("player").toString())),
-                        Integer.parseInt(score.get("score").toString())
-                ));
+                        points,
+                        rank));
+                if (points < lastPoints) {
+                    rank++;
+                }
             }
             Collections.sort(topScores, new Comparator<Score>() {
                 @Override

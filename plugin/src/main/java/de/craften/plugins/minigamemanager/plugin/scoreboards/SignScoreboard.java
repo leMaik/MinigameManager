@@ -58,6 +58,8 @@ public class SignScoreboard implements Scoreboard {
                 return score.getPlayer().getName();
             case SCORE:
                 return String.valueOf(score.getScore());
+            case RANK:
+                return String.valueOf(score.getRank());
             case TIME:
                 return "n/a"; //TODO
             default:
@@ -73,6 +75,7 @@ public class SignScoreboard implements Scoreboard {
         EMPTY,
         PLAYER_NAME,
         SCORE,
+        RANK,
         TIME;
 
         public static Topic fromString(String str) {
@@ -81,6 +84,8 @@ public class SignScoreboard implements Scoreboard {
                     return PLAYER_NAME;
                 case "score":
                     return SCORE;
+                case "rank":
+                    return RANK;
                 case "time":
                     return TIME;
                 default:
